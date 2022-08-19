@@ -39,6 +39,8 @@ _TEXT_BASE:
 
 	.globl lowlevel_init
 lowlevel_init:
+	/* 初始化临时栈 */
+	ldr  sp,=0x02060000
 	push	{lr}
 
 	/* r5 has always zero */
@@ -64,7 +66,20 @@ lowlevel_init:
 	ldr	r2, =S5P_CHECK_SLEEP
 	cmp	r1, r2
 	beq	wakeup_reset
-
+	/* 关闭看门狗 */
+#if 1
+	ldr r0, =0x1002330c
+	ldr r1, [r0]
+	orr r1, r1, #0x300
+	str r1, [r0]
+	ldr r0, =0x11000c08
+	ldr r1, =0x0
+	str r1, [r0]
+/* Clear  MASK_WDT_RESET_REQUEST  */
+	ldr r0, =0x1002040c
+	ldr r1, =0x00
+	str r1, [r0]
+#endif
 	/*
 	 * If U-boot is already running in ram, no need to relocate U-Boot.
 	 * Memory controller must be configured before relocating U-Boot
@@ -87,7 +102,9 @@ lowlevel_init:
 1:
 	/* for UART */
 	bl uart_asm_init
+#if 0
 	bl tzpc_init
+#endif
 	pop	{pc}
 
 wakeup_reset:
@@ -334,6 +351,14 @@ uart_asm_init:
 	str	r1, [r0, #EXYNOS4_GPIO_A0_CON_OFFSET]
 	ldr	r1, =EXYNOS4_GPIO_A1_CON_VAL
 	str	r1, [r0, #EXYNOS4_GPIO_A1_CON_OFFSET]
+	/* 初始化UART */
+	ldr	r0, =0x10030000
+	ldr	r1, =0x666666
+	ldr	r2, =CLK_SRC_PERIL0_OFFSET
+	str	r1, [r0, r2]
+	ldr	r1, =0x777777
+	ldr	r2, =CLK_DIV_PERIL0_OFFSET
+	str	r1, [r0, r2]
 
 	ldr r0, =EXYNOS4_UART_BASE
 	add r0, r0, #EXYNOS4_DEFAULT_UART_OFFSET
