@@ -29,6 +29,41 @@
 #include <linux/list.h>
 #include <linux/compiler.h>
 
+#define MMC_HS_52MHZ_1_8V_3V_IO 0x4
+#define MMC_MODE_HS_52MHz_DDR_18_3V             0x020
+#define MMC_MODE_4BIT_DDR       0x400
+#define MMC_MODE_8BIT_DDR       0x800
+#define BOOT_SIZE_MULTI         226     /* RO */
+#define EXT_CSD_CARD_TYPE_52_DDR_18_30  (1<<2)  /* Card can run DDR at 52MHz */
+#define EXT_CSD_CARD_TYPE_52_DDR_12             (1<<3)
+#define MMC_MODE_HS_52MHz_DDR_12V               0x040
+#define EXT_CSD_BUS_WIDTH_8_DDR 6
+#define MMC_BUS_WIDTH_1                 0
+#define MMC_BUS_WIDTH_4                 2
+#define MMC_BUS_WIDTH_8                 3
+#define MMC_BUS_WIDTH_4_DDR             4
+#define MMC_BUS_WIDTH_8_DDR             5
+#define EXT_CSD_BUS_WIDTH_4_DDR 5
+
+
+
+
+struct mmc_csd {
+        unsigned char           mmca_vsn;
+        unsigned short          cmdclass;
+        unsigned short          tacc_clks;
+        unsigned int            tacc_ns;
+        unsigned int            r2w_factor;
+        unsigned int            max_dtr; 
+        unsigned int            read_blkbits;
+        unsigned int            write_blkbits;
+        unsigned int            capacity;
+        unsigned int            read_partial:1,
+                                read_misalign:1, 
+                                write_partial:1,
+                                write_misalign:1;
+};  
+
 #define SD_VERSION_SD	0x20000
 #define SD_VERSION_2	(SD_VERSION_SD | 0x20)
 #define SD_VERSION_1_0	(SD_VERSION_SD | 0x10)
@@ -199,6 +234,8 @@
 
 #define MMCPART_NOAVAILABLE	(0xff)
 #define PART_ACCESS_MASK	(0x7)
+#define BOOT_PART_ENABLE_MASK	(0x7 << 3)
+#define BOOT_ACK		(0x1 << 6)
 #define PART_SUPPORT		(0x1)
 
 struct mmc_cid {
@@ -215,6 +252,7 @@ struct mmc_cmd {
 	uint resp_type;
 	uint cmdarg;
 	uint response[4];
+        uint flags;
 };
 
 struct mmc_data {
@@ -226,6 +264,13 @@ struct mmc_data {
 	uint blocks;
 	uint blocksize;
 };
+
+struct mmc_ext_csd {
+        unsigned int            hs_max_dtr;
+        unsigned int            sectors;
+        unsigned int            boot_size_multi;
+};
+
 
 struct mmc {
 	struct list_head link;
@@ -253,6 +298,7 @@ struct mmc {
 	uint write_bl_len;
 	uint erase_grp_size;
 	u64 capacity;
+        struct mmc_ext_csd      ext_csd;        /* mmc v4 extended card specific */
 	block_dev_desc_t block_dev;
 	int (*send_cmd)(struct mmc *mmc,
 			struct mmc_cmd *cmd, struct mmc_data *data);
@@ -275,6 +321,10 @@ int board_mmc_getcd(struct mmc *mmc);
 int mmc_switch_part(int dev_num, unsigned int part_num);
 int mmc_getcd(struct mmc *mmc);
 void spl_mmc_load(void) __noreturn;
+#ifdef CONFIG_CMD_MOVINAND
+ulong movi_write(ulong start, lbaint_t blkcnt, void *src);
+ulong movi_read(ulong start, lbaint_t blkcnt, void *dst);
+#endif
 
 #ifdef CONFIG_GENERIC_MMC
 #define mmc_host_is_spi(mmc)	((mmc)->host_caps & MMC_MODE_SPI)

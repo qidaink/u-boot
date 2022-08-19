@@ -170,4 +170,35 @@
 #define CONFIG_NETMASK	 255.255.255.0
 #endif
 
+#define CONFIG_EVT1     1       /* EVT1 */
+#ifdef CONFIG_EVT1
+#define CONFIG_EMMC44_CH4 //eMMC44_CH4 (OMPIN[5:1] = 4)
+
+#ifdef CONFIG_SDMMC_CH2
+#define CONFIG_S3C_HSMMC
+#undef DEBUG_S3C_HSMMC
+#define USE_MMC2  
+#endif
+
+#ifdef CONFIG_EMMC44_CH4
+#define CONFIG_S5P_MSHC
+#define CONFIG_EMMC             1
+#define USE_MMC4  
+/* #define CONFIG_EMMC_8Bit */
+#define CONFIG_EMMC_EMERGENCY
+/*#define emmcdbg(fmt,args...) printf(fmt ,##args) */
+#define emmcdbg(fmt,args...)
+#endif
+
+#endif /*end CONFIG_EVT1*/
+#define CONFIG_CMD_MOVINAND
+#define CONFIG_CLK_1000_400_200
+#define CFG_PHY_UBOOT_BASE      CONFIG_SYS_SDRAM_BASE + 0x3e00000
+#define CFG_PHY_KERNEL_BASE     CONFIG_SYS_SDRAM_BASE + 0x8000
+
+#define BOOT_MMCSD      0x3
+#define BOOT_EMMC43     0x6
+#define BOOT_EMMC441    0x7
+#define CONFIG_BOARD_LATE_INIT
+
 #endif	/* __CONFIG_H */
