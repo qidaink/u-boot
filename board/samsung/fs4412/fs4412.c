@@ -30,12 +30,76 @@ DECLARE_GLOBAL_DATA_PTR;
 struct exynos4_gpio_part1 *gpio1;
 struct exynos4_gpio_part2 *gpio2;
 
+#ifdef  CONFIG_DRIVER_DM9000
+#define EXYNOS4412_SROMC_BASE 0X12570000
+
+#define DM9000_Tacs     (0x1) 
+#define DM9000_Tcos     (0x1) 
+#define DM9000_Tacc     (0x5) 
+#define DM9000_Tcoh     (0x1) 
+#define DM9000_Tah      (0xC) 
+#define DM9000_Tacp     (0x9)   
+#define DM9000_PMC      (0x1)  
+
+struct exynos_sromc {
+	unsigned int bw;
+	unsigned int bc[6];
+};
+
+void exynos_config_sromc(u32 srom_bank, u32 srom_bw_conf, u32 srom_bc_conf)
+{
+	unsigned int tmp;
+	struct exynos_sromc *srom = (struct exynos_sromc *)(EXYNOS4412_SROMC_BASE);
+
+	/* Configure SMC_BW register to handle proper SROMC bank */
+	tmp = srom->bw;
+	tmp &= ~(0xF << (srom_bank * 4));
+	tmp |= srom_bw_conf;
+	srom->bw = tmp;
+
+	/* Configure SMC_BC register */
+	srom->bc[srom_bank] = srom_bc_conf;
+}
+
+static void dm9000aep_pre_init(void)
+{
+	unsigned int tmp;
+	unsigned char smc_bank_num = 1;
+	unsigned int     smc_bw_conf=0;
+	unsigned int     smc_bc_conf=0;
+       
+	/* gpio configuration */
+	writel(0x00220020, 0x11000000 + 0x120);
+	writel(0x00002222, 0x11000000 + 0x140);
+	/* 16 Bit bus width */
+	writel(0x22222222, 0x11000000 + 0x180);
+	writel(0x0000FFFF, 0x11000000 + 0x188);
+	writel(0x22222222, 0x11000000 + 0x1C0);
+	writel(0x0000FFFF, 0x11000000 + 0x1C8);
+	writel(0x22222222, 0x11000000 + 0x1E0);
+	writel(0x0000FFFF, 0x11000000 + 0x1E8);              
+	smc_bw_conf &= ~(0xf<<4);
+	smc_bw_conf |= (1<<7) | (1<<6) | (1<<5) | (1<<4);
+	smc_bc_conf = ((DM9000_Tacs << 28)
+				 | (DM9000_Tcos << 24)
+				 | (DM9000_Tacc << 16)
+				 | (DM9000_Tcoh << 12)
+				 | (DM9000_Tah  << 8)
+				 | (DM9000_Tacp << 4)
+				 | (DM9000_PMC));
+	exynos_config_sromc(smc_bank_num,smc_bw_conf,smc_bc_conf);
+}
+#endif
+
 int board_init(void)
 {
 	gpio1 = (struct exynos4_gpio_part1 *) EXYNOS4_GPIO_PART1_BASE;
 	gpio2 = (struct exynos4_gpio_part2 *) EXYNOS4_GPIO_PART2_BASE;
 
 	gd->bd->bi_boot_params = (PHYS_SDRAM_1 + 0x100UL);
+#ifdef CONFIG_DRIVER_DM9000
+	dm9000aep_pre_init();
+#endif
 	return 0;
 }
 
@@ -107,3 +171,15 @@ int board_mmc_init(bd_t *bis)
 	return err;
 }
 #endif
+
+#ifdef CONFIG_CMD_NET
+int board_eth_init(bd_t *bis)                                                  
+{      
+	int rc = 0;
+#ifdef CONFIG_DRIVER_DM9000
+	rc = dm9000_initialize(bis);                                            
+#endif                                                                         
+	return rc;                                                              
+}  
+#endif
+

@@ -82,12 +82,12 @@
 /* Command definition*/
 #include <config_cmd_default.h>
 
-#undef CONFIG_CMD_PING
+#define CONFIG_CMD_PING
 #define CONFIG_CMD_ELF
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_MMC
 #define CONFIG_CMD_FAT
-#undef CONFIG_CMD_NET
+#define CONFIG_CMD_NET
 #undef CONFIG_CMD_NFS
 
 #define CONFIG_BOOTDELAY		3
@@ -154,4 +154,20 @@
 
 /* Enable devicetree support */
 #define CONFIG_OF_LIBFDT
+
+#ifdef  CONFIG_CMD_NET
+#define CONFIG_NET_MULTI
+#define CONFIG_DRIVER_DM9000	1
+#define CONFIG_DM9000_BASE	0x05000000
+#define DM9000_IO	CONFIG_DM9000_BASE
+#define DM9000_DATA	(CONFIG_DM9000_BASE + 4)
+#define CONFIG_DM9000_USE_16BIT
+#define CONFIG_DM9000_NO_SROM	1
+#define CONFIG_ETHADDR	 11:22:33:44:55:66
+#define CONFIG_IPADDR	 192.168.10.102
+#define CONFIG_SERVERIP	 192.168.10.101
+#define CONFIG_GATEWAYIP 192.168.10.1
+#define CONFIG_NETMASK	 255.255.255.0
+#endif
+
 #endif	/* __CONFIG_H */
