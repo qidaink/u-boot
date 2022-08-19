@@ -13,7 +13,7 @@
 
 # ===================相关参数定义=========================
 CPU_JOB_NUM=$(grep processor /proc/cpuinfo | awk '{field=$NF};END{print field+1}') # 参与编译的内核数量获取
-BOARD_NAME="origen"                                         # 硬件平台,后续以 origen 评估板为模板
+BOARD_NAME="fs4412"                                         # 硬件平台,后续以 origen 评估板为模板
 MAKE_PARAM="ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-" # 交叉编译器
 
 # ====================配置与编译============================

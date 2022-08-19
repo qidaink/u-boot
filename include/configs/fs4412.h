@@ -101,7 +101,7 @@
 /* Miscellaneous configurable options */
 #define CONFIG_SYS_LONGHELP		/* undef to save memory */
 #define CONFIG_SYS_HUSH_PARSER		/* use "hush" command parser	*/
-#define CONFIG_SYS_PROMPT		"ORIGEN # "
+#define CONFIG_SYS_PROMPT		"fs4412 # "
 #define CONFIG_SYS_CBSIZE		256	/* Console I/O Buffer Size*/
 #define CONFIG_SYS_PBSIZE		384	/* Print Buffer Size */
 #define CONFIG_SYS_MAXARGS		16	/* max number of command args */
@@ -130,7 +130,7 @@
 /* FLASH and environment organization */
 #define CONFIG_SYS_NO_FLASH		1
 #undef CONFIG_CMD_IMLS
-#define CONFIG_IDENT_STRING		" for ORIGEN"
+#define CONFIG_IDENT_STRING		" for fs4412"
 
 #define CONFIG_CLK_1000_400_200
 

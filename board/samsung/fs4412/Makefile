@@ -28,7 +28,7 @@ SOBJS	:= mem_setup.o
 SOBJS	+= lowlevel_init.o
 
 ifndef CONFIG_SPL_BUILD
-COBJS	+= origen.o
+COBJS	+= fs4412.o
 endif
 
 ifdef CONFIG_SPL_BUILD
