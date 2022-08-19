@@ -78,3 +78,10 @@ cscope.*
 
 # spl ais files
 /spl/*.ais
+
+# 三星加密引导方式文件，不可被忽略
+!CodeSign4SecureBoot
+!CodeSign4SecureBoot/*
+!sdfuse_q
+!sdfuse_q/*
+

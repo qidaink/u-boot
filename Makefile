@@ -439,6 +439,16 @@ $(obj)u-boot.srec:	$(obj)u-boot
 $(obj)u-boot.bin:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 		$(BOARD_SIZE_CHECK)
+		@#./mkuboot
+		@split -b 14336 u-boot.bin bl2
+		@+make -C sdfuse_q/
+		@#cp u-boot.bin u-boot-4212.bin
+		@#cp u-boot.bin u-boot-4412.bin
+		@#./sdfuse_q/add_sign
+		@./sdfuse_q/chksum
+		@./sdfuse_q/add_padding
+		@rm bl2a*
+		@echo
 
 $(obj)u-boot.ldr:	$(obj)u-boot
 		$(CREATE_LDR_ENV)
