@@ -102,6 +102,9 @@ int board_init(void)
 #ifdef CONFIG_DRIVER_DM9000
 	dm9000aep_pre_init();
 #endif
+#ifdef CONFIG_POWER_S5M8767
+	pmic_s5m8767_init();
+#endif
 	return 0;
 }
 

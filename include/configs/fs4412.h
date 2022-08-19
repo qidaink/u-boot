@@ -201,4 +201,6 @@
 #define BOOT_EMMC441    0x7
 #define CONFIG_BOARD_LATE_INIT
 
+#define CONFIG_POWER_S5M8767
+
 #endif	/* __CONFIG_H */

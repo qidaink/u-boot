@@ -23,6 +23,7 @@
 #include <common.h>
 #include <asm/io.h>
 #include <asm/arch/clk.h>
+#include <power/pmic.h>
 
 /* Default is s5pc100 */
 unsigned int s5p_cpu_id = 0xC100;

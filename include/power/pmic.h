@@ -99,6 +99,7 @@ int pmic_probe(struct pmic *p);
 int pmic_reg_read(struct pmic *p, u32 reg, u32 *val);
 int pmic_reg_write(struct pmic *p, u32 reg, u32 val);
 int pmic_set_output(struct pmic *p, u32 reg, int ldo, int on);
+void pmic_s5m8767_init(void);
 
 #define pmic_i2c_addr (p->hw.i2c.addr)
 #define pmic_i2c_tx_num (p->hw.i2c.tx_num)
