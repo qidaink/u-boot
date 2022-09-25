@@ -111,6 +111,7 @@
 	"initrd_addr=0x83800000\0" \
 	"initrd_high=0xffffffff\0" \
 	"bootcmd_mfg=run mfgtool_args;bootz ${loadaddr} ${initrd_addr} ${fdt_addr};\0" \
+/* 环境变量的存储与修改:CONFIG_EXTRA_ENV_SETTING S保存着环境变量的默认值，内容如下*/
 /* 修改 LCD 驱动的时候下边的 panel 也需要修改 */
 #if defined(CONFIG_SYS_BOOT_NAND)
 #define CONFIG_EXTRA_ENV_SETTINGS \
