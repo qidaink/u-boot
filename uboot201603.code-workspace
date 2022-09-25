@@ -125,5 +125,8 @@
 			"include/configs/[A-Z]*": true,
 			"include/configs/m[a-w]*": true,
 		},
+		"files.associations": {
+			"string.h": "c"
+		},
 	}
 }
