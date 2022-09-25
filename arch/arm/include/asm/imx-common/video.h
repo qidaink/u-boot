@@ -13,11 +13,11 @@
 #elif defined(CONFIG_VIDEO_MXS)
 #include <mxsfb.h>
 #endif
-
+/** LCD信息结构体，其中包括了 LCD的分辨率，像素格式， LCD的各个参数等*/
 struct display_info_t {
 	int	bus;
 	int	addr;
-	int	pixfmt;
+	int	pixfmt; /* pixfmt是像素格式，也就是一个像素点是多少位，如果是 RGB565 的话就是 16 位，如果是 888 的话就是 24位，一般使用 RGB888 */
 	int	(*detect)(struct display_info_t const *dev);
 	void	(*enable)(struct display_info_t const *dev);
 	struct	fb_videomode mode;

@@ -776,24 +776,24 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 	/* Set Brightness to high */
 	gpio_direction_output(IMX_GPIO_NR(1, 8) , 1);
 }
-
+/* LCD 参数配置 */
 struct display_info_t const displays[] = {{
-	.bus = MX6UL_LCDIF1_BASE_ADDR,
+	.bus = MX6UL_LCDIF1_BASE_ADDR,    /* IMX6ULL LCD外设接口寄存器基地址 */
 	.addr = 0,
 	.pixfmt = 24,
 	.detect = NULL,
 	.enable	= do_enable_parallel_lcd,
 	.mode	= {
-		.name			= "TFT43AB",
+		.name			= "TFT43AB",  /* 正点原子 4.3 寸屏 */
 		.xres           = 480,
 		.yres           = 272,
-		.pixclock       = 108695,
-		.left_margin    = 8,
-		.right_margin   = 4,
-		.upper_margin   = 2,
-		.lower_margin   = 4,
-		.hsync_len      = 41,
-		.vsync_len      = 10,
+		.pixclock       = 108695,     /* 像素时钟，每个像素时钟周期的长度，单位为皮秒。 */
+		.left_margin    = 8,          /* HBPD */
+		.right_margin   = 4,          /* HFPD */
+		.upper_margin   = 2,          /* VBPD */
+		.lower_margin   = 4,          /* VFBD */
+		.hsync_len      = 41,         /* HSPW */
+		.vsync_len      = 10,         /* VSPW */
 		.sync           = 0,
 		.vmode          = FB_VMODE_NONINTERLACED
 } } };

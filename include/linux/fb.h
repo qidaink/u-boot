@@ -594,21 +594,21 @@ extern int fb_set_cmap(struct fb_cmap *cmap, struct fb_info *fb_info);
 extern int fb_set_user_cmap(struct fb_cmap_user *cmap, struct fb_info *fb_info);
 extern const struct fb_cmap *fb_default_cmap(int len);
 extern void fb_invert_cmaps(void);
-
+/* LCD的参数 */
 struct fb_videomode {
-	const char *name;	/* optional */
+	const char *name;	/* optional, LCD名字，要和环境变量中的 panel相等 */
 	u32 refresh;		/* optional */
-	u32 xres;
-	u32 yres;
-	u32 pixclock;
-	u32 left_margin;
-	u32 right_margin;
-	u32 upper_margin;
-	u32 lower_margin;
-	u32 hsync_len;
-	u32 vsync_len;
+	u32 xres;           /* LCD X轴像素数量 */
+	u32 yres;           /* LCD Y轴像素数量 */
+	u32 pixclock;       /* 像素时钟，每个像素时钟周期的长度，单位为皮秒 */
+	u32 left_margin;    /* HBP，水平同步后肩  */
+	u32 right_margin;   /* HFP，水平同步前肩  */
+	u32 upper_margin;   /* VPB，垂直同步后肩  */
+	u32 lower_margin;   /* VFP，垂直同步前肩  */
+	u32 hsync_len;      /* HSPW，行同步脉宽   */
+	u32 vsync_len;      /* VSPW，垂直同步脉宽 */
 	u32 sync;
-	u32 vmode;
+	u32 vmode;          /* 大多数使用 FB_VMODE_NONINTERLACED，也就是不使用隔行扫描。 */
 	u32 flag;
 };
 
