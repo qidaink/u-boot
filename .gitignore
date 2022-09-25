@@ -84,3 +84,7 @@ GTAGS
 *.orig
 *~
 \#*#
+
+# download file
+load.imx
+/load.imx
